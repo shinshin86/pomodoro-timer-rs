@@ -1,3 +1,4 @@
+use chrono;
 use notify_rust::Notification;
 use std::{thread, time::Duration};
 
@@ -7,12 +8,24 @@ async fn main() {
     pomodoro(25, 5).await;
 }
 
+// Displays the current time log in the format of "[YYYY-MM-DD HH:MM:SS]"
+fn get_current_time_log() -> String {
+    let now = chrono::Local::now();
+    now.format("[%Y-%m-%d %H:%M:%S]").to_string()
+}
+
 async fn pomodoro(work_minutes: u64, break_minutes: u64) {
     loop {
-        start_timer(work_minutes, "Work Time! Focus!");
+        start_timer(
+            work_minutes,
+            &(get_current_time_log() + " Work Time! Focus!"),
+        );
         show_notification("Take a Break!", "Work time is over, start your break.");
 
-        start_timer(break_minutes, "Break Time! Relax!");
+        start_timer(
+            break_minutes,
+            &(get_current_time_log() + " Break Time! Relax!"),
+        );
         show_notification("Back to Work!", "Break time is over, back to work.");
     }
 }
